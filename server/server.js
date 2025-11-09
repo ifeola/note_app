@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "../client")));
 
-app.use("/api/v1", router);
+app.use("/api/auth", router);
 
 app.listen(PORT, () => {
 	console.log(`Server running on localhost:${PORT}`);
