@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { generateVerificationToken } from "../utils/generateVerificationToken.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
+import { sendVerificationEmail } from "../mailtrap/emails.js";
 
 const signup = async (request, response) => {
 	const { username, email, password } = request.body;
@@ -53,7 +54,7 @@ const signup = async (request, response) => {
 		// Generate JWT
 		generateTokenAndSetCookie(response, newUser.id);
 
-		sendVerificationEmail(newUser.email, verificationToken);
+		await sendVerificationEmail(newUser.email, verificationToken);
 
 		return response.status(201).json({
 			success: true,
@@ -130,6 +131,8 @@ const signin = async (request, response) => {
 	}
 };
 
+const verifyEmail = async (request, response) => {};
+
 const getUsers = async (request, response) => {
 	const users = await pool.query(`SELECT * FROM users`);
 	if (users.rows.length === 0)
@@ -139,4 +142,4 @@ const getUsers = async (request, response) => {
 		.json({ users: users.rows, length: users.rows.lenght });
 };
 
-export { signup, signin, getUsers };
+export { signup, signin, getUsers, verifyEmail };
